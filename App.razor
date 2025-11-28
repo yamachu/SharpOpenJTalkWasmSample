@@ -24,6 +24,7 @@
 <section>
     <h2>SharpOpenJTalkWasmSampleとは</h2>
     <p>.NET 6 RC 2下のASP.NET Coreで利用可能になった、Blazor WebAssemblyアプリケーションへのNative dependenciesサポートを使った実験的アプリケーションです。</p>
+    <p>現在は.NET 10で動作しています。</p>
     <p>ライブラリは <a href="http://open-jtalk.sourceforge.net/" target="_blank" rel="noopener noreferrer">Open JTalk</a>
         をラップした <a href="https://github.com/yamachu/SharpOpenJTalk" target="_blank"
             rel="noopener noreferrer">SharpOpenJTalk</a> を使用し、ブラウザ上で動作させています。</p>
@@ -271,16 +272,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     private async Task MountDict()
     {
-        using var stream = await Http.GetStreamAsync("static/open_jtalk_dic_utf_8-1.11.tar.gz");
-        using var gzStream = new System.IO.Compression.GZipStream(stream, CompressionMode.Decompress);
+        var bytes = await Http.GetByteArrayAsync("static/open_jtalk_dic_utf_8-1.11.tar.gz");
+        using var memoryStream = new MemoryStream(bytes);
+        using var gzStream = new System.IO.Compression.GZipStream(memoryStream, CompressionMode.Decompress);
         using var tarArchive = TarArchive.CreateInputTarArchive(gzStream, Encoding.UTF8);
         tarArchive.ExtractContents(@"/tmp/");
     }
 
     private async Task MountVoice()
     {
-        using var stream = await Http.GetStreamAsync("static/hts_voice_nitech_jp_atr503_m001-1.05.tar.gz");
-        using var gzStream = new System.IO.Compression.GZipStream(stream, CompressionMode.Decompress);
+        var bytes = await Http.GetByteArrayAsync("static/hts_voice_nitech_jp_atr503_m001-1.05.tar.gz");
+        using var memoryStream = new MemoryStream(bytes);
+        using var gzStream = new System.IO.Compression.GZipStream(memoryStream, CompressionMode.Decompress);
         using var tarArchive = TarArchive.CreateInputTarArchive(gzStream, Encoding.UTF8);
         tarArchive.ExtractContents(@"/tmp/");
     }
