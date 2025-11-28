@@ -271,16 +271,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     private async Task MountDict()
     {
-        using var stream = await Http.GetStreamAsync("static/open_jtalk_dic_utf_8-1.11.tar.gz");
-        using var gzStream = new System.IO.Compression.GZipStream(stream, CompressionMode.Decompress);
+        var bytes = await Http.GetByteArrayAsync("static/open_jtalk_dic_utf_8-1.11.tar.gz");
+        using var memoryStream = new MemoryStream(bytes);
+        using var gzStream = new System.IO.Compression.GZipStream(memoryStream, CompressionMode.Decompress);
         using var tarArchive = TarArchive.CreateInputTarArchive(gzStream, Encoding.UTF8);
         tarArchive.ExtractContents(@"/tmp/");
     }
 
     private async Task MountVoice()
     {
-        using var stream = await Http.GetStreamAsync("static/hts_voice_nitech_jp_atr503_m001-1.05.tar.gz");
-        using var gzStream = new System.IO.Compression.GZipStream(stream, CompressionMode.Decompress);
+        var bytes = await Http.GetByteArrayAsync("static/hts_voice_nitech_jp_atr503_m001-1.05.tar.gz");
+        using var memoryStream = new MemoryStream(bytes);
+        using var gzStream = new System.IO.Compression.GZipStream(memoryStream, CompressionMode.Decompress);
         using var tarArchive = TarArchive.CreateInputTarArchive(gzStream, Encoding.UTF8);
         tarArchive.ExtractContents(@"/tmp/");
     }
